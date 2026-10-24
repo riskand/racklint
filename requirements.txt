@@ -1,0 +1,8 @@
+# racklint/requirements.txt
+# racklint's runtime dependencies, as version ranges. pyproject.toml reads this file.
+httpx>=0.28
+pydantic>=2.9
+pydantic-settings>=2.6
+pyyaml>=6.0
+rich>=13.9
+typer>=0.15

@@ -1,0 +1,10 @@
+# racklint/examples/no-hardware/Dockerfile.dockerignore
+# Send only what the image installs.
+*
+!pyproject.toml
+!requirements.txt
+!requirements-network.txt
+!README.md
+!LICENSE
+!src
+**/__pycache__

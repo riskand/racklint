@@ -1,0 +1,10 @@
+{
+  "@odata.id": "/redfish/v1/Chassis/chassis",
+  "@odata.type": "#Chassis.v1_22_0.Chassis",
+  "Id": "chassis",
+  "Name": "chassis",
+  "ChassisType": "RackMount",
+  "NetworkAdapters": {
+    "@odata.id": "/redfish/v1/Chassis/chassis/NetworkAdapters"
+  }
+}

@@ -1,0 +1,22 @@
+# racklint/examples/no-hardware/nodes/defaults.toml
+# The hardware every node of device type gpu-node-h100 is planned with. seed.py writes it into NetBox as the
+# device type's config context; mockups.py serves it from each mock BMC, except where a node's [actual]
+# table says otherwise.
+device_type = "gpu-node-h100"
+manufacturer = "Example Systems"
+model = "GX-8H"
+cpu_model = "Intel(R) Xeon(R) Platinum 8480+"
+cpu_count = 2
+gpu_model = "NVIDIA H100 80GB HBM3"
+gpu_count = 8
+dimm_slots = 32
+dimm_count = 32
+dimm_capacity_mib = 65536
+ports_per_adapter = 2
+macs_recorded = true
+
+[firmware]
+BMC = "1.4.0"
+BIOS = "2.3.1"
+GPU = "96.00.89.00.01"
+NIC = "28.39.1002"

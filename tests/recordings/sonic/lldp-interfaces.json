@@ -1,0 +1,78 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "lldp/interfaces",
+          "val": {
+            "openconfig-lldp:interfaces": {
+              "interface": [
+                {
+                  "name": "Ethernet0",
+                  "neighbors": {
+                    "neighbor": [
+                      {
+                        "id": "Ethernet0",
+                        "state": {
+                          "id": "1",
+                          "system-name": "spine1",
+                          "system-description": "SONiC Software Version: SONiC.202411.example-1",
+                          "chassis-id": "02:00:00:00:41:01",
+                          "port-id": "fortyGigE0/0",
+                          "port-description": "Ethernet0",
+                          "management-address": "198.51.100.41"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "Ethernet4",
+                  "neighbors": {
+                    "neighbor": [
+                      {
+                        "id": "Ethernet4",
+                        "state": {
+                          "id": "2",
+                          "system-name": "spine1",
+                          "system-description": "SONiC Software Version: SONiC.202411.example-1",
+                          "chassis-id": "02:00:00:00:41:01",
+                          "port-id": "fortyGigE0/4",
+                          "port-description": "Ethernet4",
+                          "management-address": "198.51.100.41"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "eth0",
+                  "neighbors": {
+                    "neighbor": [
+                      {
+                        "id": "eth0",
+                        "state": {
+                          "id": "3",
+                          "system-name": "mgmt-sw1",
+                          "system-description": "Example management switch",
+                          "chassis-id": "02:00:00:00:51:01",
+                          "port-id": "Gi1/0/7",
+                          "port-description": "leaf1 management",
+                          "management-address": "198.51.100.51"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

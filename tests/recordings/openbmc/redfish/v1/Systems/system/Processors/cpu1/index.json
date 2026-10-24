@@ -1,0 +1,13 @@
+{
+  "@odata.id": "/redfish/v1/Systems/system/Processors/cpu1",
+  "@odata.type": "#Processor.v1_18_0.Processor",
+  "Id": "cpu1",
+  "Name": "Processor",
+  "ProcessorType": "CPU",
+  "Model": "Intel(R) Xeon(R) Platinum 8480+",
+  "Manufacturer": "Intel(R) Corporation",
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  }
+}

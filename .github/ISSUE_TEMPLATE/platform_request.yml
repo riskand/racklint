@@ -1,0 +1,52 @@
+# racklint/.github/ISSUE_TEMPLATE/platform_request.yml
+name: Platform request
+description: A family of servers or switches that racklint gets wrong or cannot read.
+labels: [platform]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        To support a platform, racklint needs public or anonymised responses from it. A capture must never
+        come from a network you may not publish. If you are not sure, you may not.
+
+        Everything you paste here is public. Follow the recording rules in
+        [CONTRIBUTING.md](https://github.com/riskand/racklint/blob/main/CONTRIBUTING.md#recordings).
+
+        You can also build the platform yourself, as a `racklint-<name>` package. See
+        [Writing a platform](https://github.com/riskand/racklint/blob/main/README.md#writing-a-platform)
+        in the README and
+        [Adding a platform](https://github.com/riskand/racklint/blob/main/CONTRIBUTING.md#adding-a-platform)
+        in CONTRIBUTING.md.
+  - type: input
+    id: family
+    attributes:
+      label: Device family
+      description: The vendor, the BMC or network operating system, and its version.
+      placeholder: "Acme, AcmeOS, 4.2"
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What racklint gets wrong or cannot read
+      description: What you ran, what racklint printed, and what it should have done.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Where public documentation or payloads can be found
+      description: >-
+        Links to vendor documentation, public mockups or samples, or anonymised responses, with their
+        licence.
+    validations:
+      required: true
+  - type: checkboxes
+    id: anonymised
+    attributes:
+      label: Nothing private
+      options:
+        - label: >-
+            I removed real serial numbers, MAC addresses, IP addresses, hostnames and credentials from
+            everything I pasted.
+          required: true

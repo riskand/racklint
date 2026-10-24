@@ -1,0 +1,257 @@
+# racklint/examples/no-hardware/compose.yaml
+# NetBox with rack R01 planned, one mock BMC per node on an out-of-band network, and a Vault that holds the
+# credentials racklint reads them with.
+#   docker compose up -d
+#   docker compose run --rm racklint check --rack R01
+# With the three SR Linux leaves and the spine (needs a Linux host that runs privileged containers):
+#   docker compose --profile fabric up -d
+#   docker compose --profile fabric run --rm racklint check --rack R01
+# Every password and key here is an example value.
+
+name: racklint-example
+
+x-superuser: &superuser
+  SUPERUSER_NAME: admin
+  SUPERUSER_PASSWORD: racklint-example
+
+# How the seed scripts reach Vault. The dev server's root token is an example value, like every password here.
+x-vault: &vault
+  VAULT_ADDR: http://vault:8200
+  VAULT_TOKEN: racklint-example
+
+x-racklint-image: &racklint-image
+  build:
+    context: ../..
+    dockerfile: examples/no-hardware/Dockerfile
+  image: racklint:example
+
+x-bmc: &bmc
+  image: dmtf/redfish-mockup-server:1.1.9
+  depends_on:
+    render:
+      condition: service_completed_successfully
+  volumes:
+    - mockups:/mockups:ro
+  # The image's own healthcheck probes port 8000; the example serves on port 80.
+  healthcheck:
+    test: ["CMD-SHELL", "curl --fail http://127.0.0.1/redfish/v1 || exit 1"]
+    interval: 5s
+    retries: 12
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: netbox
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: racklint-example
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U netbox -d netbox"]
+      interval: 5s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8.1-alpine
+
+  netbox:
+    image: netboxcommunity/netbox:v4.5.2-4.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_started
+    environment:
+      <<: *superuser
+      SUPERUSER_EMAIL: admin@example.com
+      # The image's default superuser token is a v1 token that NetBox 4.5 rejects; seed.py provisions one.
+      SUPERUSER_API_TOKEN: ""
+      SKIP_SUPERUSER: "false"
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: racklint-example
+      REDIS_HOST: valkey
+      REDIS_CACHE_HOST: valkey
+      SECRET_KEY: racklint-example-secret-key-not-for-production-0123456789abcdef
+      API_TOKEN_PEPPER_1: racklint-example-token-pepper-not-for-production-0123456789abcdef
+    ports:
+      - "127.0.0.1:8000:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/login/ || exit 1"]
+      start_period: 300s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # A Vault dev server: in memory, unsealed, KV version 2 at secret/, and the root token below.
+  vault:
+    image: hashicorp/vault:2.1.2
+    command: ["server", "-dev"]
+    cap_add: [IPC_LOCK]
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: racklint-example
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      # For the healthcheck's `vault status`.
+      VAULT_ADDR: http://127.0.0.1:8200
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 5s
+      retries: 12
+
+  seed:
+    <<: *racklint-image
+    entrypoint: ["python", "/example/seed.py"]
+    depends_on:
+      netbox:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+    environment:
+      <<: [*superuser, *vault]
+      NETBOX_URL: http://netbox:8080
+      TOKEN_FILE: /run/racklint/netbox-token
+    volumes:
+      - .:/example:ro
+      - token:/run/racklint
+
+  render:
+    <<: *racklint-image
+    entrypoint: ["python", "/example/mockups.py", "/mockups"]
+    volumes:
+      - .:/example:ro
+      - mockups:/mockups
+
+  bmc-n01:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n01"]
+    networks: { oob: { ipv4_address: 192.0.2.11 } }
+
+  bmc-n02:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n02"]
+    networks: { oob: { ipv4_address: 192.0.2.12 } }
+
+  bmc-n03:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n03"]
+    networks: { oob: { ipv4_address: 192.0.2.13 } }
+
+  bmc-n04:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n04"]
+    networks: { oob: { ipv4_address: 192.0.2.14 } }
+
+  bmc-n05:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n05"]
+    networks: { oob: { ipv4_address: 192.0.2.15 } }
+
+  bmc-n06:
+    <<: *bmc
+    command: ["-p", "80", "-D", "/mockups/n06"]
+    networks: { oob: { ipv4_address: 192.0.2.16 } }
+
+  seed-fabric:
+    <<: *racklint-image
+    profiles: [fabric]
+    entrypoint: ["python", "/example/seed_fabric.py"]
+    depends_on:
+      seed: { condition: service_completed_successfully }
+      vault: { condition: service_healthy }
+    environment:
+      <<: *vault
+      NETBOX_URL: http://netbox:8080
+      TOKEN_FILE: /run/racklint/netbox-token
+    volumes:
+      - .:/example:ro
+      - token:/run/racklint:ro
+    # Attached so Compose creates the fabric network before containerlab joins it.
+    networks: [default, fabric]
+
+  clab:
+    image: ghcr.io/srl-labs/clab:0.81.1
+    profiles: [fabric]
+    depends_on:
+      seed-fabric: { condition: service_completed_successfully }
+    privileged: true
+    network_mode: host
+    pid: host
+    # containerlab bind-mounts its lab directory into the switches by host path, so it sees the same path.
+    working_dir: ${PWD}/fabric
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/netns:/var/run/netns
+      - ./fabric:${PWD}/fabric
+    # Deploy, then stay up. The service is healthy once the lab is deployed; `fabric-ready` waits for gNMI and
+    # LLDP. A later `compose run racklint` finds the lab running and does not deploy it again.
+    entrypoint:
+      - sh
+      - -c
+      - containerlab deploy -t fabric.clab.yml --reconfigure && touch /tmp/ready && exec sleep infinity
+    healthcheck:
+      # Ready once the entrypoint has deployed the lab.
+      test: ["CMD-SHELL", "test -f /tmp/ready"]
+      interval: 10s
+      # Deploy may pull the SR Linux images first.
+      start_period: 900s
+      retries: 3
+
+  # The switches answer gNMI some time after deploy, and learn their neighbours some time after that: wait for
+  # both, not for a fixed time.
+  fabric-ready:
+    <<: *racklint-image
+    profiles: [fabric]
+    entrypoint: ["python", "/example/wait_fabric.py"]
+    depends_on:
+      clab: { condition: service_healthy }
+    volumes:
+      - .:/example:ro
+    # Reaches the switches' management addresses, 198.51.100.x.
+    networks: [fabric]
+
+  racklint:
+    <<: *racklint-image
+    profiles: [cli]
+    # Read the token seed.py provisioned, then run racklint with the arguments given to `compose run`.
+    entrypoint: ["sh", "-c", 'RACKLINT_NETBOX_TOKEN="$$(cat /run/racklint/netbox-token)" exec racklint "$$@"', "racklint"]
+    depends_on:
+      seed: { condition: service_completed_successfully }
+      vault: { condition: service_healthy }
+      bmc-n01: { condition: service_healthy }
+      bmc-n02: { condition: service_healthy }
+      bmc-n03: { condition: service_healthy }
+      bmc-n04: { condition: service_healthy }
+      bmc-n05: { condition: service_healthy }
+      bmc-n06: { condition: service_healthy }
+      # Without the fabric profile, Compose skips fabric-ready.
+      fabric-ready: { condition: service_completed_successfully, required: false }
+    environment:
+      RACKLINT_NETBOX_URL: http://netbox:8080
+      # Every BMC and switch credential comes from Vault: seed.py and seed_fabric.py write them there.
+      RACKLINT_VAULT_ADDR: http://vault:8200
+      RACKLINT_VAULT_TOKEN: racklint-example
+      RACKLINT_BMC_SCHEME: http
+      RACKLINT_SWITCH_CA_BUNDLE: /example/fabric/clab-racklint/.tls/ca/ca.pem
+    volumes:
+      - .:/example:ro
+      - token:/run/racklint:ro
+    networks: [default, oob, fabric]
+
+networks:
+  oob:
+    # TEST-NET-1, reserved for documentation: it cannot clash with a real network.
+    ipam:
+      config:
+        - subnet: 192.0.2.0/24
+  fabric:
+    name: racklint-fabric     # fabric.clab.yml joins it by this name
+    ipam:
+      config:
+        - subnet: 198.51.100.0/24
+
+volumes:
+  postgres:
+  mockups:
+  token:

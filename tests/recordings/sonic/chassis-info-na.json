@@ -1,0 +1,21 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "CHASSIS_INFO/chassis 1",
+          "val": {
+            "serial": "N/A",
+            "model": "N/A",
+            "revision": "N/A",
+            "switch_host_serial": "N/A"
+          }
+        }
+      ]
+    }
+  ]
+}

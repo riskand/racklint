@@ -1,0 +1,7 @@
+# racklint/examples/no-hardware/nodes/n06.toml
+serial = "SN-R01-06"
+bmc_ip = "192.0.2.16"
+macs = ["02:00:00:00:06:01", "02:00:00:00:06:02", "02:00:00:00:06:03", "02:00:00:00:06:04"]
+
+# The MACs are not yet recorded in NetBox, so racklint checks this node's ports by count only.
+macs_recorded = false

@@ -1,0 +1,58 @@
+# racklint/.github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - name: The tag matches the version in pyproject.toml
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          test "$GITHUB_REF_NAME" = "v$version" || { echo "tag $GITHUB_REF_NAME, version $version"; exit 1; }
+      - name: The changelog has notes for this version
+        run: python .github/scripts/release_notes.py "${GITHUB_REF_NAME#v}" > /dev/null
+      - run: pip install -e ".[dev]"
+      - run: pytest --cov
+
+  pypi:
+    needs: test
+    runs-on: ubuntu-24.04
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  # A separate job, after PyPI, so that only this job can write to the repository and a failed
+  # publish leaves no release behind.
+  github-release:
+    needs: pypi
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - name: The GitHub release shows the notes from the changelog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/release_notes.py "${GITHUB_REF_NAME#v}" > "$RUNNER_TEMP/notes.md"
+          gh release create "$GITHUB_REF_NAME" --title "racklint ${GITHUB_REF_NAME#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag

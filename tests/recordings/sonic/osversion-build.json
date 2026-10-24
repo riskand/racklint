@@ -1,0 +1,19 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "osversion/build",
+          "val": {
+            "build_version": "SONiC.202411.example-1",
+            "error": ""
+          }
+        }
+      ]
+    }
+  ]
+}

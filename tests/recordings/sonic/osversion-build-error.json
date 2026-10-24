@@ -1,0 +1,19 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "osversion/build",
+          "val": {
+            "build_version": "sonic.NA",
+            "error": "open /etc/sonic/sonic_version.yml: no such file or directory"
+          }
+        }
+      ]
+    }
+  ]
+}

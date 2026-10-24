@@ -1,0 +1,164 @@
+# racklint/.github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check
+      - run: ruff format --check
+      - run: mypy
+      - name: The built package installs with the network extra
+        run: |
+          pip install build
+          python -m build
+          python -m venv "$RUNNER_TEMP/package"
+          "$RUNNER_TEMP/package/bin/pip" install "$(echo dist/*.whl)[network]"
+          "$RUNNER_TEMP/package/bin/python" -c "import racklint.gnmi, pygnmi.client"
+          "$RUNNER_TEMP/package/bin/racklint" --help
+
+  unit:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: pytest --cov
+      - run: pytest examples/no-hardware
+
+  changes:
+    # A job skipped by `if:` still satisfies a required check; a workflow skipped by `paths-ignore` stays pending.
+    # If this job fails its output is empty, so the integration jobs run: a skip caused by a failure would show green.
+    # This is an allowlist of what the integration jobs depend on (see touches_integration below): src/, examples/,
+    # tests/integration/, pyproject.toml, requirements*.txt at the root and this workflow. A change to anything else
+    # (docs, *.md, .github/scripts/, other workflows, the unit tests) cannot alter their result.
+    # Either rule sets code=false. Rule 1: nothing in the whole pull request, against its base, is on the allowlist.
+    # Rule 2: a synchronize push whose new commits touch nothing on the allowlist, on top of a previous push whose
+    # integration jobs succeeded or were skipped. The previous result matters because an unrelated push after a
+    # failed run would otherwise skip the jobs and turn the check green without the failure ever being fixed.
+    # A skipped previous run only passed these same rules, so the chain always ends in a real success.
+    # A force-push (BEFORE is not an ancestor of HEAD_SHA), any failed command, an empty file list or a missing
+    # check run runs everything.
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      checks: read
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - id: diff
+        name: Does the change affect the integration jobs?
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          BEFORE: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_ACTION: ${{ github.event.action }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # True if the file list ($1) touches anything the integration jobs depend on. An empty list counts as
+          # touching, and so does a path git quoted (it starts with a double quote), so neither can cause a skip.
+          touches_integration() {
+            [ -z "$1" ] || printf '%s\n' "$1" | grep -qE \
+              '^"|^(src/|examples/|tests/integration/)|^(pyproject\.toml|requirements[^/]*\.txt|\.github/workflows/ci\.yml)$'
+          }
+          previous_push_ok() {
+            for name in integration integration-fabric; do
+              ok=$(gh api "repos/$GITHUB_REPOSITORY/commits/$BEFORE/check-runs?check_name=$name" \
+                --jq '.check_runs | length > 0 and all(.[]; .conclusion == "success" or .conclusion == "skipped")') \
+                && [ "$ok" = true ] || return 1
+            done
+          }
+
+          code=true
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            if files=$(git diff --name-only "$BASE" HEAD) && ! touches_integration "$files"; then
+              code=false
+            fi
+            if [ "$EVENT_ACTION" = synchronize ] \
+              && git merge-base --is-ancestor "$BEFORE" "$HEAD_SHA" \
+              && files=$(git diff --name-only "$BEFORE" "$HEAD_SHA") \
+              && ! touches_integration "$files" \
+              && previous_push_ok; then
+              code=false
+            fi
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+  integration:
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: examples/no-hardware
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+        working-directory: .
+      - run: docker compose build
+      - run: docker compose up -d
+      - run: pytest -m integration -v
+        working-directory: .
+      - name: Example output, for the README
+        run: docker compose run --rm -T racklint check --rack R01 || true
+      - if: failure()
+        run: docker compose logs --tail 100
+      - if: always()
+        run: docker compose down -v
+
+  integration-fabric:
+    # Not a required check: the fabric pulls two 3.2 GB images and starts four switches.
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.code != 'false' }}
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: examples/no-hardware
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+        working-directory: .
+      - name: Pull the SR Linux images ahead of containerlab
+        run: docker pull -q ghcr.io/nokia/srlinux:26.7.2 && docker pull -q ghcr.io/nokia/srlinux:26.3.3
+      - run: docker compose --profile fabric build
+      - run: docker compose --profile fabric up -d
+      - run: pytest -m integration -v
+        working-directory: .
+        env:
+          RACKLINT_EXAMPLE_PROFILE: fabric
+      - name: Example output, for the README
+        if: always()
+        run: docker compose --profile fabric run --rm -T racklint check --rack R01 || true
+      - if: failure()
+        run: docker compose --profile fabric logs --tail 100
+      - if: always()
+        run: |
+          docker compose run --rm --no-deps --entrypoint containerlab clab destroy -t fabric.clab.yml --cleanup || true
+          docker compose --profile fabric down -v

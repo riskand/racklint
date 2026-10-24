@@ -1,0 +1,69 @@
+# racklint/.github/ISSUE_TEMPLATE/bug_report.yml
+name: Bug report
+description: racklint printed something wrong, failed, or missed a mismatch.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the report. For a security issue, do not use this form: see
+        [SECURITY.md](https://github.com/riskand/racklint/blob/main/SECURITY.md).
+
+        Everything you paste here is public. Follow the recording rules in
+        [CONTRIBUTING.md](https://github.com/riskand/racklint/blob/main/CONTRIBUTING.md#recordings): use
+        `192.0.2.0/24` and `198.51.100.0/24` for addresses, and invented serial numbers and MAC addresses.
+  - type: input
+    id: racklint-version
+    attributes:
+      label: racklint version
+      description: Run `racklint --version` and give the version.
+      placeholder: "0.1.1"
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      description: Run `python --version`.
+      placeholder: "3.12.4"
+    validations:
+      required: true
+  - type: input
+    id: platforms
+    attributes:
+      label: Platform or platforms involved
+      description: The `racklint.platform` of the devices, or "default" if they name none.
+      placeholder: "default, sonic"
+    validations:
+      required: true
+  - type: textarea
+    id: ran
+    attributes:
+      label: What you ran
+      description: The command or the library call, with the settings that matter.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: printed
+    attributes:
+      label: What racklint printed
+      description: The output, the JSON report or the traceback.
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: anonymised
+    attributes:
+      label: Nothing private
+      options:
+        - label: >-
+            I removed real serial numbers, MAC addresses, IP addresses, hostnames and credentials from
+            everything I pasted.
+          required: true

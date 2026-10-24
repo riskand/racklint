@@ -1,0 +1,6 @@
+# racklint/examples/no-hardware/nodes/n04.toml
+# Planted fault: the credential set its config context names is not in Vault.
+credential_set = "bmc-r02"
+serial = "SN-R01-04"
+bmc_ip = "192.0.2.14"
+macs = ["02:00:00:00:04:01", "02:00:00:00:04:02", "02:00:00:00:04:03", "02:00:00:00:04:04"]

@@ -1,0 +1,9 @@
+{
+  "@odata.id": "/redfish/v1/Chassis/chassis/NetworkAdapters/nic0",
+  "@odata.type": "#NetworkAdapter.v1_9_0.NetworkAdapter",
+  "Id": "nic0",
+  "Name": "Network Adapter",
+  "Ports": {
+    "@odata.id": "/redfish/v1/Chassis/chassis/NetworkAdapters/nic0/Ports"
+  }
+}

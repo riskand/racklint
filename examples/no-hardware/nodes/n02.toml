@@ -1,0 +1,13 @@
+# racklint/examples/no-hardware/nodes/n02.toml
+serial = "SN-R01-02"
+bmc_ip = "192.0.2.12"
+macs = ["02:00:00:00:02:01", "02:00:00:00:02:02", "02:00:00:00:02:03", "02:00:00:00:02:04"]
+
+# Its config context names the platform for upstream OpenBMC.
+platform = "openbmc"
+
+[actual]
+# Reported the way upstream OpenBMC reports GPUs; n02 still passes.
+gpu_processor_type = "Accelerator"
+# Reported the way upstream OpenBMC reports NICs: ports without MACs, and no functions.
+nic_ports_without_macs = true

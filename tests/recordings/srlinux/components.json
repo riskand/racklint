@@ -1,0 +1,61 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "components",
+          "val": {
+            "openconfig-platform:components": {
+              "component": [
+                {
+                  "name": "Chassis",
+                  "state": {
+                    "name": "Chassis",
+                    "type": "openconfig-platform-types:CHASSIS",
+                    "serial-no": "SN-SW-01"
+                  }
+                },
+                {
+                  "name": "ControlA",
+                  "state": {
+                    "name": "ControlA",
+                    "type": "openconfig-platform-types:CONTROLLER_CARD",
+                    "serial-no": "SN-SW-01",
+                    "software-version": "v26.7.2-519-g94fbd638fa8"
+                  }
+                },
+                {
+                  "name": "SoftwareModule-lldp_mgr",
+                  "state": {
+                    "name": "SoftwareModule-lldp_mgr",
+                    "type": "openconfig-platform-types:SOFTWARE_MODULE",
+                    "software-version": "v26.7.2-519-g94fbd638fa8"
+                  }
+                },
+                {
+                  "name": "BootLoader-ControlA",
+                  "state": {
+                    "name": "BootLoader-ControlA",
+                    "type": "openconfig-platform-types:BOOT_LOADER",
+                    "software-version": "Sim bootloader"
+                  }
+                },
+                {
+                  "name": "Ethernet-1/1-Port",
+                  "state": {
+                    "name": "Ethernet-1/1-Port",
+                    "type": "openconfig-platform-types:PORT"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# racklint/examples/no-hardware/baseline.yaml
+# Approved firmware for the example rack. Each match is a glob on the Id of a FirmwareInventory member.
+device_types:
+  gpu-node-h100:
+    - match: "BMC"
+      approved: ["1.4.0"]
+    - match: "BIOS"
+      approved: ["2.3.1"]
+    - match: "GPU_*"
+      approved: ["96.00.89.00.01"]
+    - match: "NIC_*"
+      approved: ["28.39.1002", "28.40.1000"]
+  ixr-d2l:
+    - match: "OS"
+      approved: ["v26.7.2-519-g94fbd638fa8"]

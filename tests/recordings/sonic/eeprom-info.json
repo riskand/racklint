@@ -1,0 +1,20 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "EEPROM_INFO/0x23",
+          "val": {
+            "Name": "Serial Number",
+            "Len": "15",
+            "Value": "SN-SONIC-EEPROM"
+          }
+        }
+      ]
+    }
+  ]
+}

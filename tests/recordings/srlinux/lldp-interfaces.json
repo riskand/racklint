@@ -1,0 +1,82 @@
+{
+  "notification": [
+    {
+      "timestamp": 1792700000000000000,
+      "prefix": null,
+      "alias": null,
+      "atomic": false,
+      "update": [
+        {
+          "path": "lldp/interfaces",
+          "val": {
+            "openconfig-lldp:interface": [
+              {
+                "name": "ethernet-1/1",
+                "neighbors": {
+                  "neighbor": [
+                    {
+                      "id": "spine1/ethernet-1/1",
+                      "state": {
+                        "id": "spine1/ethernet-1/1",
+                        "system-name": "spine1",
+                        "chassis-id": "02:00:00:00:21:01",
+                        "chassis-id-type": "openconfig-lldp-types:MAC_ADDRESS",
+                        "port-id": "ethernet-1/1",
+                        "port-id-type": "openconfig-lldp-types:INTERFACE_NAME",
+                        "port-description": "",
+                        "management-address": "198.51.100.21",
+                        "management-address-type": "IPV4"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "ethernet-1/2",
+                "neighbors": {
+                  "neighbor": [
+                    {
+                      "id": "spine1/ethernet-1/2",
+                      "state": {
+                        "id": "spine1/ethernet-1/2",
+                        "system-name": "spine1",
+                        "chassis-id": "02:00:00:00:21:01",
+                        "chassis-id-type": "openconfig-lldp-types:MAC_ADDRESS",
+                        "port-id": "ethernet-1/2",
+                        "port-id-type": "openconfig-lldp-types:INTERFACE_NAME",
+                        "port-description": "",
+                        "management-address": "198.51.100.21",
+                        "management-address-type": "IPV4"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "mgmt0",
+                "neighbors": {
+                  "neighbor": [
+                    {
+                      "id": "leaf2/mgmt0",
+                      "state": {
+                        "id": "leaf2/mgmt0",
+                        "system-name": "leaf2",
+                        "chassis-id": "02:00:00:00:12:01",
+                        "chassis-id-type": "openconfig-lldp-types:MAC_ADDRESS",
+                        "port-id": "mgmt0",
+                        "port-id-type": "openconfig-lldp-types:INTERFACE_NAME",
+                        "port-description": "",
+                        "management-address": "198.51.100.12",
+                        "management-address-type": "IPV4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

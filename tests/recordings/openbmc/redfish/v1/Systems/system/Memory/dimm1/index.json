@@ -1,0 +1,11 @@
+{
+  "@odata.id": "/redfish/v1/Systems/system/Memory/dimm1",
+  "@odata.type": "#Memory.v1_11_0.Memory",
+  "Id": "dimm1",
+  "Name": "DIMM Slot",
+  "CapacityMiB": 65536,
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  }
+}

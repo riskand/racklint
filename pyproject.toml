@@ -1,0 +1,82 @@
+# racklint/pyproject.toml
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "racklint"
+version = "0.1.1"
+description = "Check servers and switches against NetBox before they go into service."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Reza Iskandar Achmad" }]
+requires-python = ">=3.12"
+keywords = ["redfish", "bmc", "netbox", "commissioning", "gpu", "data-centre"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Hardware",
+    "Topic :: System :: Systems Administration",
+    "Typing :: Typed",
+]
+# requirements*.txt are the source of truth; see [tool.setuptools.dynamic].
+dynamic = ["dependencies", "optional-dependencies"]
+
+[project.scripts]
+racklint = "racklint.cli:app"
+
+[project.entry-points."racklint.platforms"]
+redfish = "racklint.platforms.redfish:REDFISH"
+openbmc = "racklint.platforms.redfish:OPENBMC"
+openconfig = "racklint.platforms.openconfig:OPENCONFIG"
+srlinux = "racklint.platforms.openconfig:SRLINUX"
+sonic = "racklint.platforms.sonic:SONIC"
+
+[project.urls]
+Repository = "https://github.com/riskand/racklint"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies = { dev = { file = ["requirements-dev.txt"] }, network = { file = ["requirements-network.txt"] } }
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+# Where ruff looks for first-party modules: the package, the tests package and the example's scripts.
+src = ["src", ".", "examples/no-hardware"]
+# The plan and design hold Python in Markdown code blocks; they are documentation, not code to format.
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "PT", "RUF", "ASYNC"]
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["src", "tests", "examples/no-hardware"]
+
+[[tool.mypy.overrides]]
+# pygnmi ships no type information.
+module = ["pygnmi", "pygnmi.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = ["--strict-markers", "-m", "not integration"]
+markers = ["integration: runs against the Docker Compose stack in examples/no-hardware"]
+
+[tool.coverage.run]
+source = ["racklint"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true

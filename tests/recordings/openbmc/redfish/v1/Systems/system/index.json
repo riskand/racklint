@@ -1,0 +1,18 @@
+{
+  "@odata.id": "/redfish/v1/Systems/system",
+  "@odata.type": "#ComputerSystem.v1_16_0.ComputerSystem",
+  "Id": "system",
+  "Name": "system",
+  "SerialNumber": "SN-OPENBMC-0001",
+  "PowerState": "Off",
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  },
+  "Processors": {
+    "@odata.id": "/redfish/v1/Systems/system/Processors"
+  },
+  "Memory": {
+    "@odata.id": "/redfish/v1/Systems/system/Memory"
+  }
+}

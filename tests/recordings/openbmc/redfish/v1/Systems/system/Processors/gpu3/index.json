@@ -1,0 +1,13 @@
+{
+  "@odata.id": "/redfish/v1/Systems/system/Processors/gpu3",
+  "@odata.type": "#Processor.v1_18_0.Processor",
+  "Id": "gpu3",
+  "Name": "Processor",
+  "ProcessorType": "Accelerator",
+  "Model": "NVIDIA H100 80GB HBM3",
+  "Manufacturer": "NVIDIA",
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  }
+}

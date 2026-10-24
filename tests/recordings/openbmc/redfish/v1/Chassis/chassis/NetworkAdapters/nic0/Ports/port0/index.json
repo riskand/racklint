@@ -1,0 +1,13 @@
+{
+  "@odata.id": "/redfish/v1/Chassis/chassis/NetworkAdapters/nic0/Ports/port0",
+  "@odata.type": "#Port.v1_4_0.Port",
+  "Id": "port0",
+  "Name": "Port",
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  },
+  "Metrics": {
+    "@odata.id": "/redfish/v1/Chassis/chassis/NetworkAdapters/nic0/Ports/port0/Metrics"
+  }
+}

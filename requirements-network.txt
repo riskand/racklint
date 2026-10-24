@@ -1,0 +1,3 @@
+# racklint/requirements-network.txt
+# Reading switches over gNMI, installed as racklint's `network` extra: pip install "racklint[network]".
+pygnmi>=0.8.15

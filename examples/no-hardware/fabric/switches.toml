@@ -1,0 +1,25 @@
+# racklint/examples/no-hardware/fabric/switches.toml
+# The fabric as NetBox plans it. fabric.clab.yml builds it with two planted differences: leaf2's uplinks
+# are swapped on the spine, and leaf3 runs an older SR Linux than the baseline approves.
+manufacturer = "Nokia"
+model = "7220 IXR-D2L"
+device_type = "ixr-d2l"
+# Every SR Linux container reports this serial, so the example plants no serial fault.
+serial = "Sim Serial No."
+interface_type = "25gbase-x-sfp28"
+
+switches = [
+  { name = "leaf1",  rack = "R01", mgmt_ip = "198.51.100.11" },
+  { name = "leaf2",  rack = "R01", mgmt_ip = "198.51.100.12" },
+  { name = "leaf3",  rack = "R01", mgmt_ip = "198.51.100.13" },
+  { name = "spine1", rack = "R02", mgmt_ip = "198.51.100.21" },
+]
+
+links = [
+  ["leaf1:ethernet-1/1", "spine1:ethernet-1/1"],
+  ["leaf1:ethernet-1/2", "spine1:ethernet-1/2"],
+  ["leaf2:ethernet-1/1", "spine1:ethernet-1/3"],
+  ["leaf2:ethernet-1/2", "spine1:ethernet-1/4"],
+  ["leaf3:ethernet-1/1", "spine1:ethernet-1/5"],
+  ["leaf3:ethernet-1/2", "spine1:ethernet-1/6"],
+]

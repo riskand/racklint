@@ -1,0 +1,19 @@
+# racklint/.gitignore
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.idea/
+.vscode/
+
+# containerlab writes the example fabric's certificates and state here
+examples/no-hardware/fabric/clab-racklint/

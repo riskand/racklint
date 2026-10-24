@@ -1,0 +1,24 @@
+# racklint/examples/no-hardware/fabric/fabric.clab.yml
+# The fabric as built. Planted differences from switches.toml: leaf2's two uplinks land on the spine swapped
+# (ethernet-1/4 and ethernet-1/3), and leaf3 runs SR Linux 26.3.3, which the baseline does not approve.
+name: racklint
+mgmt:
+  network: racklint-fabric        # created by compose.yaml, so the racklint service can reach the switches
+  ipv4-subnet: 198.51.100.0/24    # TEST-NET-2, reserved for documentation
+topology:
+  defaults:
+    kind: nokia_srlinux
+    image: ghcr.io/nokia/srlinux:26.7.2
+    startup-config: switch.cfg
+  nodes:
+    leaf1: { mgmt-ipv4: 198.51.100.11 }
+    leaf2: { mgmt-ipv4: 198.51.100.12 }
+    leaf3: { mgmt-ipv4: 198.51.100.13, image: "ghcr.io/nokia/srlinux:26.3.3" }
+    spine1: { mgmt-ipv4: 198.51.100.21 }
+  links:
+    - endpoints: ["leaf1:e1-1", "spine1:e1-1"]
+    - endpoints: ["leaf1:e1-2", "spine1:e1-2"]
+    - endpoints: ["leaf2:e1-1", "spine1:e1-4"]
+    - endpoints: ["leaf2:e1-2", "spine1:e1-3"]
+    - endpoints: ["leaf3:e1-1", "spine1:e1-5"]
+    - endpoints: ["leaf3:e1-2", "spine1:e1-6"]

@@ -1,0 +1,38 @@
+{
+  "@odata.id": "/redfish/v1/Systems/system/Processors",
+  "@odata.type": "#ProcessorCollection.ProcessorCollection",
+  "Name": "Processor Collection",
+  "Members@odata.count": 10,
+  "Members": [
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/cpu0"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/cpu1"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu0"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu1"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu2"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu3"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu4"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu5"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu6"
+    },
+    {
+      "@odata.id": "/redfish/v1/Systems/system/Processors/gpu7"
+    }
+  ]
+}

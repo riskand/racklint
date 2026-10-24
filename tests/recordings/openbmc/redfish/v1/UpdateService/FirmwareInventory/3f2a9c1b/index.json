@@ -1,0 +1,12 @@
+{
+  "@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/3f2a9c1b",
+  "@odata.type": "#SoftwareInventory.v1_4_0.SoftwareInventory",
+  "Id": "3f2a9c1b",
+  "Name": "Software Inventory",
+  "Version": "2.14.0-dev-1243-g7c1d1b0",
+  "Updateable": false,
+  "Status": {
+    "State": "Enabled",
+    "Health": "OK"
+  }
+}

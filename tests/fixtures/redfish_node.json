@@ -1,0 +1,133 @@
+{
+  "/redfish/v1": {
+    "@odata.id": "/redfish/v1",
+    "Id": "RootService",
+    "Systems": {"@odata.id": "/redfish/v1/Systems"},
+    "Chassis": {"@odata.id": "/redfish/v1/Chassis"},
+    "UpdateService": {"@odata.id": "/redfish/v1/UpdateService"}
+  },
+  "/redfish/v1/Systems": {
+    "@odata.id": "/redfish/v1/Systems",
+    "Members": [{"@odata.id": "/redfish/v1/Systems/1"}]
+  },
+  "/redfish/v1/Systems/1": {
+    "@odata.id": "/redfish/v1/Systems/1",
+    "Id": "1",
+    "SerialNumber": "SN-01",
+    "Processors": {"@odata.id": "/redfish/v1/Systems/1/Processors"},
+    "Memory": {"@odata.id": "/redfish/v1/Systems/1/Memory"}
+  },
+  "/redfish/v1/Systems/1/Processors": {
+    "@odata.id": "/redfish/v1/Systems/1/Processors",
+    "Members": [
+      {"@odata.id": "/redfish/v1/Systems/1/Processors/CPU_0"},
+      {"@odata.id": "/redfish/v1/Systems/1/Processors/GPU_0"},
+      {"@odata.id": "/redfish/v1/Systems/1/Processors/GPU_1"}
+    ]
+  },
+  "/redfish/v1/Systems/1/Processors/CPU_0": {
+    "@odata.id": "/redfish/v1/Systems/1/Processors/CPU_0",
+    "Id": "CPU_0",
+    "ProcessorType": "CPU",
+    "Model": "Intel(R) Xeon(R) Platinum 8480+"
+  },
+  "/redfish/v1/Systems/1/Processors/GPU_0": {
+    "@odata.id": "/redfish/v1/Systems/1/Processors/GPU_0",
+    "Id": "GPU_0",
+    "ProcessorType": "GPU",
+    "Model": "NVIDIA H100 80GB HBM3"
+  },
+  "/redfish/v1/Systems/1/Processors/GPU_1": {
+    "@odata.id": "/redfish/v1/Systems/1/Processors/GPU_1",
+    "Id": "GPU_1",
+    "ProcessorType": "GPU",
+    "Model": "NVIDIA H100 80GB HBM3"
+  },
+  "/redfish/v1/Systems/1/Memory": {
+    "@odata.id": "/redfish/v1/Systems/1/Memory",
+    "Members": [
+      {"@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_0"},
+      {"@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_1"},
+      {"@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_2"}
+    ]
+  },
+  "/redfish/v1/Systems/1/Memory/DIMM_0": {
+    "@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_0",
+    "Id": "DIMM_0",
+    "CapacityMiB": 65536,
+    "Status": {"State": "Enabled", "Health": "OK"}
+  },
+  "/redfish/v1/Systems/1/Memory/DIMM_1": {
+    "@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_1",
+    "Id": "DIMM_1",
+    "CapacityMiB": 65536,
+    "Status": {"State": "Enabled", "Health": "OK"}
+  },
+  "/redfish/v1/Systems/1/Memory/DIMM_2": {
+    "@odata.id": "/redfish/v1/Systems/1/Memory/DIMM_2",
+    "Id": "DIMM_2",
+    "Status": {"State": "Absent"}
+  },
+  "/redfish/v1/Chassis": {
+    "@odata.id": "/redfish/v1/Chassis",
+    "Members": [{"@odata.id": "/redfish/v1/Chassis/1"}]
+  },
+  "/redfish/v1/Chassis/1": {
+    "@odata.id": "/redfish/v1/Chassis/1",
+    "Id": "1",
+    "NetworkAdapters": {"@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters"}
+  },
+  "/redfish/v1/Chassis/1/NetworkAdapters": {
+    "@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters",
+    "Members": [{"@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0"}]
+  },
+  "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0": {
+    "@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0",
+    "Id": "NIC_0",
+    "NetworkDeviceFunctions": {"@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions"}
+  },
+  "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions": {
+    "@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions",
+    "Members": [
+      {"@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/0"},
+      {"@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/1"}
+    ]
+  },
+  "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/0": {
+    "@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/0",
+    "Id": "0",
+    "Ethernet": {"PermanentMACAddress": "02:00:00:00:01:01", "MACAddress": "02:00:00:00:01:01"}
+  },
+  "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/1": {
+    "@odata.id": "/redfish/v1/Chassis/1/NetworkAdapters/NIC_0/NetworkDeviceFunctions/1",
+    "Id": "1",
+    "Ethernet": {"MACAddress": "02-00-00-00-01-02"}
+  },
+  "/redfish/v1/UpdateService": {
+    "@odata.id": "/redfish/v1/UpdateService",
+    "FirmwareInventory": {"@odata.id": "/redfish/v1/UpdateService/FirmwareInventory"}
+  },
+  "/redfish/v1/UpdateService/FirmwareInventory": {
+    "@odata.id": "/redfish/v1/UpdateService/FirmwareInventory",
+    "Members": [
+      {"@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/BMC"},
+      {"@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/GPU_0"},
+      {"@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/GPU_1"}
+    ]
+  },
+  "/redfish/v1/UpdateService/FirmwareInventory/BMC": {
+    "@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/BMC",
+    "Id": "BMC",
+    "Version": "1.4.0"
+  },
+  "/redfish/v1/UpdateService/FirmwareInventory/GPU_0": {
+    "@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/GPU_0",
+    "Id": "GPU_0",
+    "Version": "96.00.89.00.01"
+  },
+  "/redfish/v1/UpdateService/FirmwareInventory/GPU_1": {
+    "@odata.id": "/redfish/v1/UpdateService/FirmwareInventory/GPU_1",
+    "Id": "GPU_1",
+    "Version": "96.00.89.00.01"
+  }
+}
